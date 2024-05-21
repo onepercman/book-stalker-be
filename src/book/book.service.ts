@@ -53,6 +53,8 @@ export class BookService {
   async list(query: GetBookDto) {
     const { take = 10, page = 1, categoryId, search = "", sortType } = query
 
+    const skip = (page - 1) * take
+
     const filter: FilterQuery<BookDocument> = {}
 
     if (categoryId) {
@@ -63,13 +65,15 @@ export class BookService {
       filter.name = { $regex: search, $options: "i" }
     }
 
-    const queryBuilder = this.bookModel
-      .find(filter)
-      .sort({ createdAt: sortType === ESortType.ASC ? -1 : 1 })
-      .skip((page - 1) * take)
-      .limit(take)
-
-    const list = await queryBuilder.exec()
+    const [list, count] = await Promise.all([
+      this.bookModel
+        .find(filter)
+        .sort({ createdAt: sortType === ESortType.ASC ? -1 : 1 })
+        .skip(skip)
+        .limit(take)
+        .exec(),
+      this.bookModel.countDocuments(filter),
+    ])
 
     const bookIds = list.map((book) => book._id.toString())
 
@@ -96,7 +100,6 @@ export class BookService {
       }
     })
 
-    const count = await this.bookModel.count(queryBuilder)
     return {
       data: newList,
       count,
