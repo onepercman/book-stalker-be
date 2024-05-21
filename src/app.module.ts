@@ -4,12 +4,13 @@ import { MongooseModule } from "@nestjs/mongoose"
 import { PassportModule } from "@nestjs/passport"
 import { BookModule } from "./book/book.module"
 import { CategoryModule } from "./category/category.module"
+import { CrawlModule } from "./crawl/crawl.module"
 import environments from "./helpers/environments"
+import { ReactionsModule } from "./reactions/reactions.module"
 import { ReadTimeModule } from "./read-time/read-time.module"
+import { ScheduleModule } from "./schedule/schedule.module"
 import { TrackerModule } from "./tracker/tracker.module"
 import { UserModule } from "./user/user.module"
-import { ReactionsModule } from './reactions/reactions.module';
-import { CrawlModule } from './crawl/crawl.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { CrawlModule } from './crawl/crawl.module';
     ReadTimeModule,
     ReactionsModule,
     CrawlModule,
+    ScheduleModule,
   ],
 })
 export class AppModule {}

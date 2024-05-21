@@ -1,5 +1,6 @@
 import { Book, BookDocument } from "@/book/book.schema"
 import { Category, CategoryDocument } from "@/category/category.schema"
+import { Crawl, CrawlDocument } from "@/crawl/crawl.schema"
 import databases from "@/database/database.map"
 import { randomUserAgent } from "@/helpers/helper"
 import { ImageGateway } from "@/services/image.gateway.service"
@@ -24,7 +25,8 @@ export class BookModule implements OnApplicationBootstrap {
   constructor(
     @InjectModel(Book.name) private bookModel: Model<BookDocument>,
     @InjectModel(Tracker.name) private trackerModel: Model<TrackerDocument>,
-    @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>
+    @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
+    @InjectModel(Crawl.name) private crawModel: Model<CrawlDocument>
   ) {}
   async onApplicationBootstrap() {
     console.log("[BookModule] onApplicationBootstrap")

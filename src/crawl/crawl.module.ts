@@ -21,8 +21,8 @@ export class CrawlModule implements OnApplicationBootstrap {
   ) {}
 
   async onApplicationBootstrap() {
-    console.log("[CrawlModule] onApplicationBootstrap")
-    this.initCrawl().then()
+    // console.log("[CrawlModule] onApplicationBootstrap")
+    // this.initCrawl().then()
     // this.crawlCategory().then()
   }
 

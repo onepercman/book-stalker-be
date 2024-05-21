@@ -3,6 +3,7 @@ import { Category, CategorySchema } from "@/category/category.schema"
 import { Crawl, CrawlSchema } from "@/crawl/crawl.schema"
 import { Reactions, ReactionsSchema } from "@/reactions/reactions.schema"
 import { ReadTime, ReadTimeSchema } from "@/read-time/read-time.schema"
+import { Schedule, ScheduleSchema } from "@/schedule/schedule.schema"
 import { Tracker, TrackerSchema } from "@/tracker/tracker.schema"
 import { User, UserSchema } from "@/user/user.schema"
 
@@ -14,6 +15,7 @@ const databases = [
   { name: ReadTime.name, schema: ReadTimeSchema },
   { name: Reactions.name, schema: ReactionsSchema },
   { name: Crawl.name, schema: CrawlSchema },
+  { name: Schedule.name, schema: ScheduleSchema },
 ]
 
 export default databases
