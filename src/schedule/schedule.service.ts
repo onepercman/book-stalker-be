@@ -20,4 +20,9 @@ export class ScheduleService {
     const schedule = new this.scheduleModel({ userId: this.request.user._id, title, time })
     return await schedule.save()
   }
+
+  async delete(id: string) {
+    const schedule = await this.scheduleModel.findById(id)
+    return await schedule.remove()
+  }
 }
