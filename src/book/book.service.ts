@@ -1,7 +1,6 @@
 import { CreateBookDto, GetBookDto } from "@/book/book.dto"
 import { Category, CategoryDocument } from "@/category/category.schema"
 import { ESortType } from "@/dtos/paginate.dto"
-import { ETypeReaction } from "@/reactions/dto/create-reaction.dto"
 import { Reactions, ReactionsDocument } from "@/reactions/reactions.schema"
 import { Tracker, TrackerDocument } from "@/tracker/tracker.schema"
 import { UserDocument } from "@/user/user.schema"
@@ -65,43 +64,18 @@ export class BookService {
       filter.name = { $regex: search, $options: "i" }
     }
 
-    const [list, count] = await Promise.all([
+    const [data, count] = await Promise.all([
       this.bookModel
         .find(filter)
         .sort({ createdAt: sortType === ESortType.ASC ? -1 : 1 })
-        .skip(skip)
         .limit(take)
+        .skip(skip)
         .exec(),
-      this.bookModel.countDocuments(filter),
+      this.bookModel.countDocuments(filter).exec(),
     ])
-
-    const bookIds = list.map((book) => book._id.toString())
-
-    const reactions = await this.reactionModel.aggregate([
-      { $match: { bookId: { $in: bookIds } } },
-      { $group: { _id: "$bookId", reactions: { $push: "$type" } } },
-    ])
-
-    const reactionCounts = reactions.reduce((acc, { _id, reactions }) => {
-      acc[_id] = {
-        likeTotal: reactions.filter((type) => type === ETypeReaction.LIKE).length,
-        dislikeTotal: reactions.filter((type) => type === ETypeReaction.DISLIKE).length,
-      }
-      return acc
-    }, {})
-
-    const newList = list.map((book) => {
-      const bookId = book._id.toString()
-      const { likeTotal = 0, dislikeTotal = 0 } = reactionCounts[bookId] || {}
-      return {
-        ...book.toJSON(),
-        likeTotal,
-        dislikeTotal,
-      }
-    })
 
     return {
-      data: newList,
+      data,
       count,
     }
   }
