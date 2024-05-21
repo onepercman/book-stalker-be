@@ -108,6 +108,11 @@ export class BookService {
     return this.bookModel.find({ _id: { $in: reactions.map((e) => e.bookId) } })
   }
 
+  async continous() {
+    const latest = await this.trackerModel.find({ userId: this.request.user._id }).sort({ lastVisit: -1 }).limit(6)
+    return this.bookModel.find({ _id: { $in: latest.map((el) => el.bookId) } })
+  }
+
   async get(_id: string) {
     const book = await this.bookModel.findOne({ _id })
     const tracker = await this.trackerModel.findOne({ bookId: _id, userId: this.request.user.id })

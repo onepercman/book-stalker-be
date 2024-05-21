@@ -27,6 +27,13 @@ export class BookController {
     return this.bookService.liked()
   }
 
+  @Get("continous")
+  @UseGuards(JwtGuard)
+  @ApiBearerAuth()
+  async continous() {
+    return this.bookService.continous()
+  }
+
   @Get(":id")
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
