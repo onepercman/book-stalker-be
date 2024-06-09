@@ -12,6 +12,8 @@ import { FileInterceptor } from "@nestjs/platform-express"
 import { ApiBearerAuth, ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger"
 import { imageParseFilePipeBuilder } from "src/helpers/image.parser"
 import { JwtGuard } from "./guards/jwt.guard"
+import { RoleGuard } from "./role/role.guard"
+import { Roles } from "./roles/roles.decorator"
 import { Login, Register } from "./user.dto"
 import { UserService } from "./user.service"
 
@@ -31,6 +33,15 @@ export class UserController {
     if (!email) throw new BadRequestException("Hãy nhập email của bạn")
     if (!password) throw new BadRequestException("Hãy nhập mật khẩu")
     const user = await this.userService.login(dto)
+    return user
+  }
+
+  @Post("login/admin")
+  async loginAdmin(@Body() dto: Login) {
+    const { email, password } = dto
+    if (!email) throw new BadRequestException("Hãy nhập email của bạn")
+    if (!password) throw new BadRequestException("Hãy nhập mật khẩu")
+    const user = await this.userService.loginAdmin(dto)
     return user
   }
 
@@ -57,4 +68,10 @@ export class UserController {
   @ApiBearerAuth()
   @Get("test-auth")
   async testAuth() {}
+
+  @Roles("admin")
+  @UseGuards(JwtGuard, RoleGuard)
+  @ApiBearerAuth()
+  @Get("test-auth-admin")
+  async testAuthAdmin() {}
 }

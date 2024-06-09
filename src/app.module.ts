@@ -11,8 +11,6 @@ import { ReadTimeModule } from "./read-time/read-time.module"
 import { ScheduleModule } from "./schedule/schedule.module"
 import { TrackerModule } from "./tracker/tracker.module"
 import { UserModule } from "./user/user.module"
-import { AdminController } from './admin/admin.controller';
-import { AdminModule } from './admin/admin.module';
 
 @Module({
   imports: [
@@ -33,8 +31,7 @@ import { AdminModule } from './admin/admin.module';
     ReactionsModule,
     CrawlModule,
     ScheduleModule,
-    AdminModule,
   ],
-  controllers: [AdminController],
+  controllers: [],
 })
 export class AppModule {}

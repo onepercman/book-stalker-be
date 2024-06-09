@@ -44,6 +44,15 @@ export class UserService {
     return this.signUser(user)
   }
 
+  async loginAdmin({ email, password }: Login) {
+    const user = await this.userModel.findOne({ email })
+    if (!user) throw new BadRequestException("Tài khoản không tồn tại")
+    if (user.role !== "admin") throw new BadRequestException("Tài khoản không có quyền quản trị")
+    const isValidPassword = bcrypt.compareSync(password, user.passwordHash)
+    if (!isValidPassword) throw new BadRequestException("Mật khẩu chưa đúng")
+    return this.signUser(user)
+  }
+
   async updateAvatar(file: any) {
     const user = this.request.user
     const { thumbnailUrl } = await this.imageKitService.upload(file)
