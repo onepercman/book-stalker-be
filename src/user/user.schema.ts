@@ -14,8 +14,11 @@ export class User {
   @Prop({ default: "http://www.gravatar.com/avatar/?d=identicon" })
   avatar: string
 
-  @Prop()
+  @Prop({ required: true })
   passwordHash: string
+
+  @Prop({ default: "user" })
+  role: "user" | "admin"
 }
 
 export const UserSchema = SchemaFactory.createForClass(User)

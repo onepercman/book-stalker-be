@@ -4,7 +4,7 @@ import { ApiBearerAuth, ApiTags } from "@nestjs/swagger"
 import { TrackerDocument } from "./tracker.schema"
 import { TrackerService } from "./tracker.service"
 
-@ApiTags("tracker")
+@ApiTags("Tracker")
 @Controller("tracker")
 export class TrackerController {
   constructor(private readonly trackerService: TrackerService) {}
