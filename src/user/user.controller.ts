@@ -2,8 +2,11 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Delete,
   Get,
+  Param,
   Post,
+  Query,
   UploadedFile,
   UseGuards,
   UseInterceptors,
@@ -14,7 +17,7 @@ import { imageParseFilePipeBuilder } from "src/helpers/image.parser"
 import { JwtGuard } from "./guards/jwt.guard"
 import { RoleGuard } from "./role/role.guard"
 import { Roles } from "./roles/roles.decorator"
-import { Login, Register } from "./user.dto"
+import { AssignAdminDto, GetUserDto, Login, Register } from "./user.dto"
 import { UserService } from "./user.service"
 
 @ApiTags("User")
@@ -64,6 +67,23 @@ export class UserController {
     return user
   }
 
+  @Get()
+  @Roles("admin")
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard, RoleGuard)
+  async list(@Query() query: GetUserDto) {
+    return this.userService.list(query)
+  }
+
+  @Post("assign-admin")
+  @Roles("admin")
+  @ApiBearerAuth()
+  @UseGuards(JwtGuard, RoleGuard)
+  async assignAdmin(@Body() dto: AssignAdminDto) {
+    if (!dto.id) throw new BadRequestException("Không tìm thấy người dùng")
+    return this.userService.assignAdmin(dto)
+  }
+
   @UseGuards(JwtGuard)
   @ApiBearerAuth()
   @Get("test-auth")
@@ -74,4 +94,12 @@ export class UserController {
   @ApiBearerAuth()
   @Get("test-auth-admin")
   async testAuthAdmin() {}
+
+  @Delete(":id")
+  @Roles("admin")
+  @UseGuards(JwtGuard, RoleGuard)
+  @ApiBearerAuth()
+  async deleteBook(@Param("id") id: string) {
+    return this.userService.delete(id)
+  }
 }

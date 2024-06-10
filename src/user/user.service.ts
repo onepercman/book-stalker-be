@@ -1,12 +1,13 @@
+import { ESortType } from "@/dtos/paginate.dto"
 import environments from "@/helpers/environments"
-import { BadRequestException, Inject, Injectable } from "@nestjs/common"
+import { BadRequestException, Inject, Injectable, NotFoundException } from "@nestjs/common"
 import { REQUEST } from "@nestjs/core"
 import { JwtService } from "@nestjs/jwt"
 import { InjectModel } from "@nestjs/mongoose"
 import * as bcrypt from "bcrypt"
-import { Model } from "mongoose"
+import { FilterQuery, Model } from "mongoose"
 import { ImageGateway } from "src/services/image.gateway.service"
-import { Login, Register } from "./user.dto"
+import { AssignAdminDto, GetUserDto, Login, Register } from "./user.dto"
 import { User, UserDocument } from "./user.schema"
 @Injectable()
 export class UserService {
@@ -59,5 +60,44 @@ export class UserService {
     user.avatar = thumbnailUrl
     await user.save()
     return user
+  }
+
+  async list(query: GetUserDto) {
+    const { take = 10, page = 1, search = "", sortType } = query
+
+    const skip = (page - 1) * take
+
+    const filter: FilterQuery<UserDocument> = {}
+
+    if (search) {
+      filter.email = { $regex: search, $options: "i" }
+    }
+
+    const [data, count] = await Promise.all([
+      this.userModel
+        .find(filter)
+        .sort({ createdAt: sortType === ESortType.ASC ? -1 : 1 })
+        .limit(take)
+        .skip(skip)
+        .exec(),
+      this.userModel.countDocuments(filter).exec(),
+    ])
+
+    return {
+      data,
+      count,
+    }
+  }
+
+  async assignAdmin({ id, isAdmin }: AssignAdminDto) {
+    const count = await this.userModel.find({ role: "admin" }).count()
+    if (!isAdmin && count <= 1) throw new BadRequestException("Không thể xoá quản trị viên")
+    return this.userModel.findByIdAndUpdate(id, { role: isAdmin ? "admin" : "user" })
+  }
+
+  async delete(id: string) {
+    const user = await this.userModel.findById(id)
+    if (!user) throw new NotFoundException("Không tìm thấy người dùng")
+    return user.delete()
   }
 }

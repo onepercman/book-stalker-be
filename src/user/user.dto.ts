@@ -1,4 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger"
+import { PaginateDto } from "@/dtos/paginate.dto"
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger"
 
 export class Register {
   @ApiProperty({ default: "onepercman@gmail.com" })
@@ -56,4 +57,14 @@ export interface IUserResponse extends Document {
   role: string
   emailVerified: boolean
   passwordSetup: boolean
+}
+
+export class AssignAdminDto {
+  id: string
+  isAdmin: boolean
+}
+
+export class GetUserDto extends PaginateDto {
+  @ApiPropertyOptional()
+  search: string
 }
