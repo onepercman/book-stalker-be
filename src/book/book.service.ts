@@ -1,10 +1,10 @@
-import { CreateBookDto, GetBookDto } from "@/book/book.dto"
+import { CreateBookDto, GetBookDto, UpdateBookDto } from "@/book/book.dto"
 import { Category, CategoryDocument } from "@/category/category.schema"
 import { ESortType } from "@/dtos/paginate.dto"
 import { Reactions, ReactionsDocument } from "@/reactions/reactions.schema"
 import { Tracker, TrackerDocument } from "@/tracker/tracker.schema"
 import { UserDocument } from "@/user/user.schema"
-import { BadRequestException, Inject, Injectable } from "@nestjs/common"
+import { Inject, Injectable, NotFoundException } from "@nestjs/common"
 import { REQUEST } from "@nestjs/core"
 import { InjectModel } from "@nestjs/mongoose"
 import { FilterQuery, Model } from "mongoose"
@@ -27,26 +27,15 @@ export class BookService {
   //   console.log("randomCategory", randomCategory)
   // }
 
-  async create(books: CreateBookDto) {
-    const book = await this.bookModel.findOne({ name: books.name })
-    if (book) {
-      throw new BadRequestException("Book with this name already exists")
-    }
+  create(dto: CreateBookDto) {
+    const newBook = new this.bookModel(dto)
+    return newBook.save()
+  }
 
-    const category = await this.categoryModel.findOne({ id: books.categoryId })
-    if (!category) {
-      const categories = await this.categoryModel.find()
-      const randomCategory = categories[Math.floor(Math.random() * categories.length)]
-      // throw new BadRequestException("Category not found")
-      books.categoryId = randomCategory.id
-    }
-
-    const newBook = new this.bookModel({
-      ...books,
-    })
-
-    await newBook.save()
-    return newBook
+  async update(id: string, dto: UpdateBookDto) {
+    const book = await this.bookModel.findById(id)
+    if (!book) throw new NotFoundException("Không tìm thấy sách")
+    return book.update(dto)
   }
 
   async list(query: GetBookDto) {
@@ -104,13 +93,19 @@ export class BookService {
     }
   }
 
-  async upload(name: string, file: any) {
+  async upload(file: any) {
     const { url } = await this.imageKitService.upload(file)
-    const book = new this.bookModel({
-      name,
-      uri: url,
-    })
-    await book.save()
-    return book
+    return url
+  }
+
+  async delete(id: string) {
+    const book = await this.bookModel.findById(id)
+    if (!book) throw new NotFoundException("Không tìm thấy sách")
+    return book.delete()
+  }
+
+  async deleteMany(ids: string[]) {
+    const res = await this.bookModel.deleteMany({ id: { $in: ids } })
+    return res.deletedCount
   }
 }

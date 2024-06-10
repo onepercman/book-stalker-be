@@ -19,6 +19,20 @@ export class CreateBookDto {
   thumbnail: string
 }
 
+export class UpdateBookDto {
+  @ApiPropertyOptional()
+  name: string
+
+  @ApiPropertyOptional()
+  categoryId: string
+
+  @ApiPropertyOptional()
+  uri: string
+
+  @ApiPropertyOptional()
+  thumbnail: string
+}
+
 export class GetBookDto extends PaginateDto {
   @ApiPropertyOptional()
   categoryId: string
