@@ -4,7 +4,6 @@ import { MongooseModule } from "@nestjs/mongoose"
 import { PassportModule } from "@nestjs/passport"
 import { BookModule } from "./book/book.module"
 import { CategoryModule } from "./category/category.module"
-import { CrawlModule } from "./crawl/crawl.module"
 import environments from "./helpers/environments"
 import { ReactionsModule } from "./reactions/reactions.module"
 import { ReadTimeModule } from "./read-time/read-time.module"
@@ -29,7 +28,6 @@ import { UserModule } from "./user/user.module"
     CategoryModule,
     ReadTimeModule,
     ReactionsModule,
-    CrawlModule,
     ScheduleModule,
   ],
   controllers: [],
