@@ -23,18 +23,4 @@ export class ReadTimeController {
   async findAll(@Query() query: GetReadTimeDto) {
     return this.readTimeService.findAll(query)
   }
-  // @Get(":id")
-  // findOne(@Param("id") id: string) {
-  //   return this.readTimeService.findOne(+id)
-  // }
-  //
-  // @Patch(":id")
-  // update(@Param("id") id: string, @Body() updateReadTimeDto: UpdateReadTimeDto) {
-  //   return this.readTimeService.update(+id, updateReadTimeDto)
-  // }
-  //
-  // @Delete(":id")
-  // remove(@Param("id") id: string) {
-  //   return this.readTimeService.remove(+id)
-  // }
 }

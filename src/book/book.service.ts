@@ -21,12 +21,6 @@ export class BookService {
     private readonly imageKitService: ImageGateway
   ) {}
 
-  // async onApplicationBootstrap() {
-  //   const categories = await this.categoryModel.find()
-  //   const randomCategory = categories[Math.floor(Math.random() * categories.length)]
-  //   console.log("randomCategory", randomCategory)
-  // }
-
   create(dto: CreateBookDto) {
     const newBook = new this.bookModel(dto)
     return newBook.save()

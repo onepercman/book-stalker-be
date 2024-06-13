@@ -17,6 +17,9 @@ export class Tracker {
   @Prop({ required: true, default: 0 })
   currentPage: number
 
+  @Prop({ required: true, default: "" })
+  currentCfi: string
+
   @Prop({ required: true, default: 0 })
   totalPage: number
 

@@ -15,19 +15,4 @@ export class ReactionsController {
   create(@Body() createReactionDto: CreateReactionDto) {
     return this.reactionsService.create(createReactionDto)
   }
-
-  // @Get("book")
-  // findAll() {
-  //   return this.reactionsService.findAll()
-  // }
-
-  // @Get(":id")
-  // findOne(@Param("id") id: string) {
-  //   return this.reactionsService.findOne(+id)
-  // }
-  //
-  // @Patch(":id")
-  // update(@Param("id") id: string, @Body() updateReactionDto: UpdateReactionDto) {
-  //   return this.reactionsService.update(+id, updateReactionDto)
-  // }
 }

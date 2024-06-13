@@ -37,11 +37,6 @@ export class ReadTimeService {
     if (readTimeOld) {
       if (readTimeOld.createdAt) {
         const time = new Date().getTime() - readTimeOld.createdAt.getTime()
-        // console.log("new Date().getTime(): ", new Date(readTimeOld.createdAt.getTime()))
-        // console.log("new Date().getTime(): ", new Date())
-        // console.log("readTimeOld.createdAt.getTime(): ", readTimeOld.createdAt.getTime())
-        // console.log("time", time)
-        // TODO: time < 60s => false
         if (time < 60000) {
           return false
         }
@@ -61,7 +56,6 @@ export class ReadTimeService {
     const { user } = this.request
     const userId = user?.id
 
-    // Define the date aggregation based on the typeTime
     let dateAggregation
     switch (typeTime) {
       case ETypeTime.DAY:
@@ -80,10 +74,9 @@ export class ReadTimeService {
         throw new BadRequestException("Invalid typeTime")
     }
 
-    // Use aggregation to group by createdAt and count the documents
     const readTimeStats = await this.readTimeModel.aggregate([
       {
-        $match: { ownerId: userId }, // Only consider documents with the correct ownerId
+        $match: { ownerId: userId },
       },
       {
         $group: {
@@ -92,11 +85,10 @@ export class ReadTimeService {
         },
       },
       {
-        $sort: { _id: 1 }, // Sort by date
+        $sort: { _id: 1 },
       },
     ])
 
-    // Initialize an array to hold the results
     let result
     if (typeTime === ETypeTime.DAY) {
       result = new Array(24).fill(0).map((_, index) => ({
@@ -109,7 +101,6 @@ export class ReadTimeService {
         value: 0,
       }))
     } else if (typeTime === ETypeTime.MONTH) {
-      // Get the number of days in the current month
       const now = new Date()
       const month = now.getMonth()
       const daysInMonth = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate()
@@ -125,17 +116,16 @@ export class ReadTimeService {
       }))
     }
 
-    // Update the count for each time unit
     for (const stat of readTimeStats) {
       if (typeTime === ETypeTime.DAY) {
         result[stat._id].value = stat.count
       } else if (typeTime === ETypeTime.WEEK) {
-        const dayIndex = (stat._id + 5) % 7 // This will convert 1 (Sunday) to 0 (Monday), 2 (Monday) to 1 (Tuesday), etc.
+        const dayIndex = (stat._id + 5) % 7
         result[dayIndex].value = stat.count
       } else if (typeTime === ETypeTime.MONTH) {
-        result[stat._id - 1].value = stat.count // Subtract 1 because array indices start at 0
+        result[stat._id - 1].value = stat.count
       } else if (typeTime === ETypeTime.YEAR) {
-        result[stat._id - 1].value = stat.count // Subtract 1 because array indices start at 0
+        result[stat._id - 1].value = stat.count
       }
     }
 

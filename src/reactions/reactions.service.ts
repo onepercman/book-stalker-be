@@ -1,7 +1,5 @@
 import { Book, BookDocument } from "@/book/book.schema"
-import { Category, CategoryDocument } from "@/category/category.schema"
 import { Reactions, ReactionsDocument } from "@/reactions/reactions.schema"
-import { Tracker, TrackerDocument } from "@/tracker/tracker.schema"
 import { UserDocument } from "@/user/user.schema"
 import { BadRequestException, Inject, Injectable } from "@nestjs/common"
 import { REQUEST } from "@nestjs/core"
@@ -15,8 +13,6 @@ export class ReactionsService {
   constructor(
     @Inject(REQUEST) private readonly request: { user: UserDocument },
     @InjectModel(Book.name) private bookModel: Model<BookDocument>,
-    // @InjectModel(Tracker.name) private trackerModel: Model<TrackerDocument>,
-    // @InjectModel(Category.name) private categoryModel: Model<CategoryDocument>,
     @InjectModel(Reactions.name) private reactionModel: Model<ReactionsDocument>
   ) {}
 

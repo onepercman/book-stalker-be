@@ -15,27 +15,6 @@ export class TrackerService {
     return this.trackerModel.findById(id)
   }
 
-  list() {
-    const { user } = this.request
-    return true
-    // return this.trackerModel.find({ userId: user._id })
-  }
-
-  async updateReadTime(trackerId: string, bookId: string) {
-    const { user } = this.request
-    console.log("user: ", user._id)
-    const trackers = await this.trackerModel.findOne({
-      userId: user._id.toString(),
-      _id: trackerId,
-    })
-    console.log("trackers", trackers)
-    // trackers.forEach(async (tracker) => {
-    //   tracker.updateReadTime = new Date()
-    // })
-    // return trackers;
-    return true
-  }
-
   async update({ bookId, currentPage, totalPage, lastVisit }: TrackerDocument) {
     const { user } = this.request
 
