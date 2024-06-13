@@ -15,7 +15,7 @@ export class TrackerService {
     return this.trackerModel.findById(id)
   }
 
-  async update({ bookId, currentPage, totalPage, lastVisit }: TrackerDocument) {
+  async update({ bookId, currentPage, currentCfi, totalPage, lastVisit }: TrackerDocument) {
     const { user } = this.request
 
     const tracker = await this.trackerModel.findOne({ userId: user._id.toString(), bookId })
@@ -24,6 +24,7 @@ export class TrackerService {
         userId: user._id.toString(),
         bookId,
         currentPage,
+        currentCfi,
         totalPage,
         lastVisit,
       })

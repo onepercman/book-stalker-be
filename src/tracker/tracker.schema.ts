@@ -11,16 +11,16 @@ export class Tracker {
   @Prop({ required: true })
   bookId: string
 
-  @Prop({ required: true, default: Date.now() })
+  @Prop({ default: Date.now() })
   lastVisit: number
 
-  @Prop({ required: true, default: 0 })
+  @Prop({ default: 0 })
   currentPage: number
 
-  @Prop({ required: true, default: "" })
+  @Prop({ default: "" })
   currentCfi: string
 
-  @Prop({ required: true, default: 0 })
+  @Prop({ default: 0 })
   totalPage: number
 
   @Prop({ default: 1 })
